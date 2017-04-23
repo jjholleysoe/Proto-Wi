@@ -36,6 +36,7 @@ class CommandAndDataHandler {
   TelemetryPacket& Telemetry;
   RobotState& State;
   bool SendResponseSignal;
+  void ProcessOrientationCmd(CommandOrientation & cmdOreintation);
   void ProcessCmd(IdValuePairFloat & cmd);
   void PackInt(uint32_t id);
   void PackFloat(uint32_t id, float value);

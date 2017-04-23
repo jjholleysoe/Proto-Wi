@@ -33,7 +33,7 @@ class RobotState {
 
   /// - Robot control
   float ControlAngle;
-  float ControlYaw;
+  float ControlHeading;
 
  protected:
   /// - None yet

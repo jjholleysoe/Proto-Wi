@@ -18,7 +18,7 @@ _sym_db = _symbol_database.Default()
 DESCRIPTOR = _descriptor.FileDescriptor(
   name='comm_packet.proto',
   package='',
-  serialized_pb=_b('\n\x11\x63omm_packet.proto\"4\n\x12\x43ommandOrientation\x12\r\n\x05\x41ngle\x18\x01 \x02(\x02\x12\x0f\n\x07Heading\x18\x02 \x02(\x02\"-\n\x10IdValuePairFloat\x12\n\n\x02Id\x18\x01 \x02(\r\x12\r\n\x05Value\x18\x02 \x01(\x02\"c\n\rCommandPacket\x12\x31\n\x14\x43ommandedOrientation\x18\x01 \x01(\x0b\x32\x13.CommandOrientation\x12\x1f\n\x04\x43mds\x18\x02 \x03(\x0b\x32\x11.IdValuePairFloat\"d\n\x0fTelemetryPacket\x12\x15\n\rMeasuredAngle\x18\x01 \x02(\x02\x12\x17\n\x0fMeasuredHeading\x18\x02 \x02(\x02\x12!\n\x06Status\x18\x03 \x03(\x0b\x32\x11.IdValuePairFloat')
+  serialized_pb=_b('\n\x11\x63omm_packet.proto\"B\n\x12\x43ommandOrientation\x12\r\n\x05\x41ngle\x18\x01 \x02(\x02\x12\x0f\n\x07Heading\x18\x02 \x02(\x02\x12\x0c\n\x04Name\x18\x03 \x02(\t\"-\n\x10IdValuePairFloat\x12\n\n\x02Id\x18\x01 \x02(\r\x12\r\n\x05Value\x18\x02 \x01(\x02\"c\n\rCommandPacket\x12\x31\n\x14\x43ommandedOrientation\x18\x01 \x01(\x0b\x32\x13.CommandOrientation\x12\x1f\n\x04\x43mds\x18\x02 \x03(\x0b\x32\x11.IdValuePairFloat\"d\n\x0fTelemetryPacket\x12\x15\n\rMeasuredAngle\x18\x01 \x02(\x02\x12\x17\n\x0fMeasuredHeading\x18\x02 \x02(\x02\x12!\n\x06Status\x18\x03 \x03(\x0b\x32\x11.IdValuePairFloat')
 )
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
@@ -46,6 +46,13 @@ _COMMANDORIENTATION = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
+    _descriptor.FieldDescriptor(
+      name='Name', full_name='CommandOrientation.Name', index=2,
+      number=3, type=9, cpp_type=9, label=2,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
   ],
   extensions=[
   ],
@@ -58,7 +65,7 @@ _COMMANDORIENTATION = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=21,
-  serialized_end=73,
+  serialized_end=87,
 )
 
 
@@ -94,8 +101,8 @@ _IDVALUEPAIRFLOAT = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=75,
-  serialized_end=120,
+  serialized_start=89,
+  serialized_end=134,
 )
 
 
@@ -131,8 +138,8 @@ _COMMANDPACKET = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=122,
-  serialized_end=221,
+  serialized_start=136,
+  serialized_end=235,
 )
 
 
@@ -175,8 +182,8 @@ _TELEMETRYPACKET = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=223,
-  serialized_end=323,
+  serialized_start=237,
+  serialized_end=337,
 )
 
 _COMMANDPACKET.fields_by_name['CommandedOrientation'].message_type = _COMMANDORIENTATION

@@ -10,11 +10,27 @@ CommandAndDataHandler::CommandAndDataHandler(CommandPacket& commands, TelemetryP
 CommandAndDataHandler::~CommandAndDataHandler() {}
 
 void CommandAndDataHandler::ProcessCmds() {
+    // - Clear the count of the status variables to be sent
+    Telemetry.Status_count = 0;
     /// - Iterate over and process any rover commands that were sent
     for (uint_least8_t indx = 0; indx < Commands.Cmds_count; indx++){
         //Serial.println("Processing New Rover Command Received ... ");
         ProcessCmd(Commands.Cmds[indx]);
     }
+    /// - Process the orientation command
+    /// for some reason, I have a name to check to see if this thing exists
+    if (strlen(Commands.CommandedOrientation.Name)==0){
+      PackInt(ORIENTATION_CMD_REJECT);
+      return;
+    }else{
+      ProcessOrientationCmd(Commands.CommandedOrientation);
+      PackInt(ORIENTATION_CMD_ACCEPT);
+    }
+}
+
+void CommandAndDataHandler::ProcessOrientationCmd(CommandOrientation & cmdOrientation) {
+  State.ControlAngle = cmdOrientation.Angle;
+  State.ControlHeading = cmdOrientation.Heading;
 }
 
 void CommandAndDataHandler::LoadTelemetry() {

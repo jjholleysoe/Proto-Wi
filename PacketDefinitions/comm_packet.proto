@@ -3,6 +3,7 @@ syntax = "proto2";
 message CommandOrientation {
     required float Angle = 1;
     required float Heading = 2;
+    required string Name = 3;
 }
 
 message IdValuePairFloat {
