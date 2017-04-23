@@ -18,7 +18,7 @@ void setup(){
   // - Serial comm init
   serialComm.InitHw();
   serialComm.Telemetry.MeasuredHeading = 0.0;
-  serialComm.Telemetry.MeasuredDistance = 0.0;
+  serialComm.Telemetry.MeasuredAngle = 0.0;
 }
 
 void loop(){

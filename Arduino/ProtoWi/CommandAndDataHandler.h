@@ -36,11 +36,10 @@ class CommandAndDataHandler {
   TelemetryPacket& Telemetry;
   RobotState& State;
   bool SendResponseSignal;
-  void ProcessRoverCmd(IdValuePairFloat & rover_cmd);
-  void ProcessWayPointCmd(WayPoint & way_point_cmd);
+  void ProcessCmd(IdValuePairFloat & cmd);
   void PackInt(uint32_t id);
   void PackFloat(uint32_t id, float value);
-  void LoadRoverStatus();
+  void LoadStatus();
 };
 
 #endif
