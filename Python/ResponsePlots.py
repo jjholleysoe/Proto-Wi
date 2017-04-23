@@ -22,8 +22,8 @@ class ResponsePlotCanvas(MplDynamicPlotCanvas):
         if (len(self.data) > 100):
             self.data.pop(0)
         try:
-            if responseData.RoverStatus[1].Value:
-                self.data.append(responseData.RoverStatus[1].Value)
+            if responseData.MeasuredAngle:
+                self.data.append(responseData.MeasuredAngle)
         except IndexError:
             return
 

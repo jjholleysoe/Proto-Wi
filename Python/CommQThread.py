@@ -11,9 +11,10 @@ class CommQThread(QThread):
         self.serialPort = serialPort
         self.serialComm = SerialCommunication(serialPort)
         self.cmd = comm_packet_pb2.CommandPacket()
-        control_signal_cmd = self.cmd.RoverCmds.add()
-        control_signal_cmd.Id = CTRL_ACTIVE
-        control_signal_cmd.Value = 0.0
+        control_signal_cmd = self.cmd.CommandedOrientation
+        control_signal_cmd.Angle = 0.0
+        control_signal_cmd.Heading = 0.0
+        control_signal_cmd.Name = "Orientation"
 
     def __del__(self):
         self.wait()

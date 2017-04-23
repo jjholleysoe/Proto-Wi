@@ -76,9 +76,10 @@ class CommDiagnosticGui(QtGui.QMainWindow, Ui_Comm_Window):
     def amplitudeChange(self):
         scaledAmplitude = self.scale(self.AmplitudeSlider.value(), (0.0,100.0), (-1.0,+1.0))
         cmd_packet = comm_packet_pb2.CommandPacket()
-        control_signal_cmd = cmd_packet.RoverCmds.add()
-        control_signal_cmd.Id = CTRL_ACTIVE
-        control_signal_cmd.Value = scaledAmplitude
+        control_signal_cmd = cmd_packet.CommandedOrientation
+        control_signal_cmd.Angle = scaledAmplitude
+        control_signal_cmd.Heading = 0.0
+        control_signal_cmd.Name = "Orientation"
         self.AmplitudeValue.setText("%.2f"%scaledAmplitude)
         self.emit(SIGNAL('send_cmds(PyQt_PyObject)'), cmd_packet)
 
