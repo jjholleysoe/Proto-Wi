@@ -18,38 +18,31 @@ _sym_db = _symbol_database.Default()
 DESCRIPTOR = _descriptor.FileDescriptor(
   name='comm_packet.proto',
   package='',
-  serialized_pb=_b('\n\x11\x63omm_packet.proto\";\n\x08WayPoint\x12\x0f\n\x07Heading\x18\x01 \x02(\x02\x12\x10\n\x08\x44istance\x18\x02 \x02(\x02\x12\x0c\n\x04Name\x18\x03 \x02(\t\"-\n\x10IdValuePairFloat\x12\n\n\x02Id\x18\x01 \x02(\r\x12\r\n\x05Value\x18\x02 \x01(\x02\"U\n\rCommandPacket\x12\x1e\n\x0bWayPointCmd\x18\x01 \x01(\x0b\x32\t.WayPoint\x12$\n\tRoverCmds\x18\x02 \x03(\x0b\x32\x11.IdValuePairFloat\"l\n\x0fTelemetryPacket\x12\x17\n\x0fMeasuredHeading\x18\x01 \x02(\x02\x12\x18\n\x10MeasuredDistance\x18\x02 \x02(\x02\x12&\n\x0bRoverStatus\x18\x03 \x03(\x0b\x32\x11.IdValuePairFloat')
+  serialized_pb=_b('\n\x11\x63omm_packet.proto\"4\n\x12\x43ommandOrientation\x12\r\n\x05\x41ngle\x18\x01 \x02(\x02\x12\x0f\n\x07Heading\x18\x02 \x02(\x02\"-\n\x10IdValuePairFloat\x12\n\n\x02Id\x18\x01 \x02(\r\x12\r\n\x05Value\x18\x02 \x01(\x02\"c\n\rCommandPacket\x12\x31\n\x14\x43ommandedOrientation\x18\x01 \x01(\x0b\x32\x13.CommandOrientation\x12\x1f\n\x04\x43mds\x18\x02 \x03(\x0b\x32\x11.IdValuePairFloat\"d\n\x0fTelemetryPacket\x12\x15\n\rMeasuredAngle\x18\x01 \x02(\x02\x12\x17\n\x0fMeasuredHeading\x18\x02 \x02(\x02\x12!\n\x06Status\x18\x03 \x03(\x0b\x32\x11.IdValuePairFloat')
 )
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
 
 
 
-_WAYPOINT = _descriptor.Descriptor(
-  name='WayPoint',
-  full_name='WayPoint',
+_COMMANDORIENTATION = _descriptor.Descriptor(
+  name='CommandOrientation',
+  full_name='CommandOrientation',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='Heading', full_name='WayPoint.Heading', index=0,
+      name='Angle', full_name='CommandOrientation.Angle', index=0,
       number=1, type=2, cpp_type=6, label=2,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='Distance', full_name='WayPoint.Distance', index=1,
+      name='Heading', full_name='CommandOrientation.Heading', index=1,
       number=2, type=2, cpp_type=6, label=2,
       has_default_value=False, default_value=0,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      options=None),
-    _descriptor.FieldDescriptor(
-      name='Name', full_name='WayPoint.Name', index=2,
-      number=3, type=9, cpp_type=9, label=2,
-      has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
@@ -65,7 +58,7 @@ _WAYPOINT = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=21,
-  serialized_end=80,
+  serialized_end=73,
 )
 
 
@@ -101,8 +94,8 @@ _IDVALUEPAIRFLOAT = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=82,
-  serialized_end=127,
+  serialized_start=75,
+  serialized_end=120,
 )
 
 
@@ -114,14 +107,14 @@ _COMMANDPACKET = _descriptor.Descriptor(
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='WayPointCmd', full_name='CommandPacket.WayPointCmd', index=0,
+      name='CommandedOrientation', full_name='CommandPacket.CommandedOrientation', index=0,
       number=1, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='RoverCmds', full_name='CommandPacket.RoverCmds', index=1,
+      name='Cmds', full_name='CommandPacket.Cmds', index=1,
       number=2, type=11, cpp_type=10, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
@@ -138,8 +131,8 @@ _COMMANDPACKET = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=129,
-  serialized_end=214,
+  serialized_start=122,
+  serialized_end=221,
 )
 
 
@@ -151,21 +144,21 @@ _TELEMETRYPACKET = _descriptor.Descriptor(
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='MeasuredHeading', full_name='TelemetryPacket.MeasuredHeading', index=0,
+      name='MeasuredAngle', full_name='TelemetryPacket.MeasuredAngle', index=0,
       number=1, type=2, cpp_type=6, label=2,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='MeasuredDistance', full_name='TelemetryPacket.MeasuredDistance', index=1,
+      name='MeasuredHeading', full_name='TelemetryPacket.MeasuredHeading', index=1,
       number=2, type=2, cpp_type=6, label=2,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='RoverStatus', full_name='TelemetryPacket.RoverStatus', index=2,
+      name='Status', full_name='TelemetryPacket.Status', index=2,
       number=3, type=11, cpp_type=10, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
@@ -182,24 +175,24 @@ _TELEMETRYPACKET = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=216,
-  serialized_end=324,
+  serialized_start=223,
+  serialized_end=323,
 )
 
-_COMMANDPACKET.fields_by_name['WayPointCmd'].message_type = _WAYPOINT
-_COMMANDPACKET.fields_by_name['RoverCmds'].message_type = _IDVALUEPAIRFLOAT
-_TELEMETRYPACKET.fields_by_name['RoverStatus'].message_type = _IDVALUEPAIRFLOAT
-DESCRIPTOR.message_types_by_name['WayPoint'] = _WAYPOINT
+_COMMANDPACKET.fields_by_name['CommandedOrientation'].message_type = _COMMANDORIENTATION
+_COMMANDPACKET.fields_by_name['Cmds'].message_type = _IDVALUEPAIRFLOAT
+_TELEMETRYPACKET.fields_by_name['Status'].message_type = _IDVALUEPAIRFLOAT
+DESCRIPTOR.message_types_by_name['CommandOrientation'] = _COMMANDORIENTATION
 DESCRIPTOR.message_types_by_name['IdValuePairFloat'] = _IDVALUEPAIRFLOAT
 DESCRIPTOR.message_types_by_name['CommandPacket'] = _COMMANDPACKET
 DESCRIPTOR.message_types_by_name['TelemetryPacket'] = _TELEMETRYPACKET
 
-WayPoint = _reflection.GeneratedProtocolMessageType('WayPoint', (_message.Message,), dict(
-  DESCRIPTOR = _WAYPOINT,
+CommandOrientation = _reflection.GeneratedProtocolMessageType('CommandOrientation', (_message.Message,), dict(
+  DESCRIPTOR = _COMMANDORIENTATION,
   __module__ = 'comm_packet_pb2'
-  # @@protoc_insertion_point(class_scope:WayPoint)
+  # @@protoc_insertion_point(class_scope:CommandOrientation)
   ))
-_sym_db.RegisterMessage(WayPoint)
+_sym_db.RegisterMessage(CommandOrientation)
 
 IdValuePairFloat = _reflection.GeneratedProtocolMessageType('IdValuePairFloat', (_message.Message,), dict(
   DESCRIPTOR = _IDVALUEPAIRFLOAT,
