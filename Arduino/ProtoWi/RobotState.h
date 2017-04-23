@@ -28,29 +28,15 @@ class RobotState {
   ~RobotState(){};
 
   /// - Sensor readings
+  float SensedAngle;
   float SensedHeading;
-  float SensedDistance;
-
-  /// - Robot guidance
-  WayPoint ActiveRoute[MaxRouteSize];
-  uint_least8_t NumWayPoints = 0;
-  inline void addWayPoint(const WayPoint& way_point);
 
   /// - Robot control
-  float ControlSignal;
-
-  /// - Telemetry
-  float ResponseSignal;
-
+  float ControlAngle;
+  float ControlYaw;
 
  protected:
- 	/// - None yet
-};
-  
-inline void RobotState::addWayPoint(const WayPoint& way_point){
-  	if (NumWayPoints >= MaxRouteSize){ return ; }
-    ActiveRoute[NumWayPoints] = way_point;
-    NumWayPoints++;
+  /// - None yet
 };
 
 #endif

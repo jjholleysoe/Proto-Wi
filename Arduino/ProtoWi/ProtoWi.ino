@@ -9,8 +9,8 @@ ProtobuffSerial serialComm;
 // - Initialize an instance of the command and data handler
 CommandAndDataHandler cmdAndDataHandler(serialComm.Commands, serialComm.Telemetry, robotState);
 
-const long cycleTimeMillis = 20;
-unsigned long previousMillis = 0;
+const long cycleTimeMicros = 10000;
+unsigned long previousMicros = 0;
 float desiredHeading = 0.0;
 float desiredDistance = 0.0;
 
@@ -22,10 +22,10 @@ void setup(){
 }
 
 void loop(){
-  unsigned long currentMillis = millis();
+  unsigned long currentMicros = micros();
 
-  if (currentMillis - previousMillis >= cycleTimeMillis) {
-    previousMillis = currentMillis;
+  if (currentMicros - previousMicros >= cycleTimeMicros) {
+    previousMicros = currentMicros;
 
     /// - Read commands from the serial port.
     serialComm.Rx();
@@ -45,7 +45,6 @@ void loop(){
 
 void performControl(){
   robotState.SensedHeading = 45.0;
-  robotState.SensedDistance = 5.0;
-  robotState.ResponseSignal = robotState.ControlSignal*0.95;
+  robotState.SensedAngle = 5.0;
 }
 
