@@ -1,9 +1,8 @@
 syntax = "proto2";
 
-message WayPoint {
-    required float Heading = 1;
-    required float Distance = 2;
-    required string Name = 3;
+message CommandOrientation {
+    required float Angle = 1;
+    required float Heading = 2;
 }
 
 message IdValuePairFloat {
@@ -12,12 +11,12 @@ message IdValuePairFloat {
 }
 
 message CommandPacket {
-    optional WayPoint WayPointCmd = 1;
-    repeated IdValuePairFloat RoverCmds = 2;
+    optional CommandOrientation CommandedOrientation = 1;
+    repeated IdValuePairFloat Cmds = 2;
 }
 
 message TelemetryPacket {
-    required float MeasuredHeading = 1;
-    required float MeasuredDistance = 2;
-    repeated IdValuePairFloat RoverStatus = 3;
+    required float MeasuredAngle = 1;
+    required float MeasuredHeading = 2;
+    repeated IdValuePairFloat Status = 3;
 }
