@@ -32,6 +32,15 @@ PD_Controller pd_controller(Kp, Kd, Kw, MaxEffort);
 
 const int DeadBand = 3;
 
+// A filter for wheel velocity
+float rightWheelVelocityFiltered = 0.0;
+float rightWheelVelocityPrev = 0.0;
+float rightWheelVelocityAlpha = 0.5;
+
+float leftWheelVelocityFiltered = 0.0;
+float leftWheelVelocityPrev = 0.0;
+float leftWheelVelocityAlpha = 0.5;
+
 // Pin Definitions
 const int leftWheelPin = 9;
 const int rightWheelPin = 6;
@@ -110,6 +119,11 @@ void performControl(){
   int leftWheelVelRaw = pulseIn(leftWheelVelPin, HIGH);
   float rightWheelVelRadps = -mapIntToFloat(rightWheelVelRaw, 10, 340, -30.0, 30.0);
   float leftWheelVelRadps = mapIntToFloat(leftWheelVelRaw, 10, 340, -30.0, 30.0);
+
+  rightWheelVelocityFiltered = (1.0 - rightWheelVelocityAlpha) * rightWheelVelRadps + rightWheelVelocityAlpha * rightWheelVelocityPrev;
+  leftWheelVelocityFiltered = (1.0 - leftWheelVelocityAlpha) * leftWheelVelRadps + leftWheelVelocityAlpha * leftWheelVelocityPrev;
+  rightWheelVelocityPrev = rightWheelVelocityFiltered;
+  leftWheelVelocityPrev = leftWheelVelocityFiltered;
 
   Serial.print(rightWheelVelRaw);
   Serial.print(" ");
