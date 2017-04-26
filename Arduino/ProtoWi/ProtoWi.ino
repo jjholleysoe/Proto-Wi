@@ -24,20 +24,42 @@ float desiredDistance = 0.0;
 
 // Controller
 const int PWM_OFFSET = 127;
-const float Kp = 125.0;
-const float Kd = 10.0;
+const float Kp = 200.0;
+const float Kd = 5.0;
+const float Kw = 1.0;
 const float MaxEffort = 35.0;
-PD_Controller pd_controller(Kp, Kd, MaxEffort);
+PD_Controller pd_controller(Kp, Kd, Kw, MaxEffort);
 
 const int DeadBand = 3;
 
 // Pin Definitions
 const int leftWheelPin = 9;
 const int rightWheelPin = 6;
-const float rightWheelMultiplier = 1.05f;
+const int rightWheelVelPin = 13;
+const int leftWheelVelPin = 12;
+const float rightWheelMultiplier = 1.75f;
+
+float mapIntToFloat(int input, int inputMinimum, int inputMaximum, float outputMinimum, float outputMaximum)
+{
+  if(input < inputMinimum)
+  {
+    return outputMinimum;
+  }
+  if(input > inputMaximum)
+  {
+    return outputMaximum;
+  }
+  float output = outputMinimum + (outputMaximum - outputMinimum) / (inputMaximum - inputMinimum) * (input - inputMinimum);
+  return output;
+    
+}
 
 void setup(){
+  pinMode(rightWheelVelPin, INPUT);
+  pinMode(leftWheelVelPin, INPUT);
+  pinMode(13, INPUT);
   // - Serial comm init
+  //Serial.begin(57600);
   serialComm.InitHw();
   serialComm.Telemetry.MeasuredHeading = 0.0;
   serialComm.Telemetry.MeasuredAngle = 0.0;
@@ -84,19 +106,22 @@ void performControl(){
   float tiltAngleRad = event.orientation.z * 3.14159 / 180.0;
   float tiltAngleDotRadps = -gyro.x();
   float yawAngleRad = event.orientation.x * 3.14159 / 180.0;
-  float effort = pd_controller.next(robotState.ControlAngle, tiltAngleRad, 0.0, tiltAngleDotRadps);
+  int rightWheelVelRaw = pulseIn(rightWheelVelPin, HIGH);
+  int leftWheelVelRaw = pulseIn(leftWheelVelPin, HIGH);
+  float rightWheelVelRadps = -mapIntToFloat(rightWheelVelRaw, 10, 340, -30.0, 30.0);
+  float leftWheelVelRadps = mapIntToFloat(leftWheelVelRaw, 10, 340, -30.0, 30.0);
 
-  if(effort > 0)
-  {
-    effort += DeadBand;
-  }
-  if(effort < 0)
-  {
-    effort -= DeadBand;
-  }
+  Serial.print(rightWheelVelRaw);
+  Serial.print(" ");
+  Serial.print(leftWheelVelRaw);
+  Serial.print(" ");
+  Serial.println();
+  
+  float rightWheelEffort = pd_controller.next(robotState.ControlAngle, tiltAngleRad, 0.0, tiltAngleDotRadps, 0.0, rightWheelVelRadps);
+  float leftWheelEffort = pd_controller.next(robotState.ControlAngle, tiltAngleRad, 0.0, tiltAngleDotRadps, 0.0, leftWheelVelRadps);
 
-  analogWrite(leftWheelPin, PWM_OFFSET - (int) effort);
-  analogWrite(rightWheelPin, PWM_OFFSET + (int) (effort * rightWheelMultiplier));
+  analogWrite(leftWheelPin, PWM_OFFSET - (int) leftWheelEffort);
+  analogWrite(rightWheelPin, PWM_OFFSET + (int) (rightWheelEffort * rightWheelMultiplier));
 
   robotState.SensedHeading = yawAngleRad;
   robotState.SensedAngle = tiltAngleRad;

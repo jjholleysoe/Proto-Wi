@@ -21,14 +21,15 @@
 ///////////////////////////////////////////////////////////////
 class PD_Controller { 
  public:
-  PD_Controller(float Kp, float Kd, float MaxEffort) : Kp(Kp), Kd(Kd), MaxEffort(MaxEffort) {};
+  PD_Controller(float Kp, float Kd, float Kw, float MaxEffort) : Kp(Kp), Kd(Kd), Kw(Kw), MaxEffort(MaxEffort) {};
   ~PD_Controller(){};
 
-  float next(float desired, float actual, float desiredDot, float actualDot);
+  float next(float desired, float actual, float desiredDot, float actualDot, float wheelVelDesired, float wheelVelActual);
 
  private:
   float Kp;
   float Kd;
+  float Kw;
 
   float MaxEffort;
 
