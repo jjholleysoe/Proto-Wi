@@ -16,7 +16,7 @@ ProtobuffSerial::~ProtobuffSerial() {
 
 void ProtobuffSerial::InitHw() {
 	mySerial.begin(57600);
-    Serial.begin(57600);
+    //Serial.begin(57600);
     while (!mySerial) {
         ; // wait for serial port to connect. Needed for native USB
     }
@@ -140,11 +140,11 @@ void ProtobuffSerial::ClearBuffersAndReset(){
 void ProtobuffSerial::PrintHex8(uint_least8_t *data, uint_least8_t length)
 {
     // prints 8-bit data in hex with leading zeroes
-    Serial.print("0x"); 
-    for (int i=0; i<length; i++) { 
-        if (data[i]<0x10) {Serial.print("0");} 
-        Serial.print(data[i],HEX); 
-        Serial.print(" "); 
-    }
+    //Serial.print("0x"); 
+    //for (int i=0; i<length; i++) { 
+    //    if (data[i]<0x10) {Serial.print("0");} 
+    //    Serial.print(data[i],HEX); 
+    //    Serial.print(" "); 
+    //}
 }
 
