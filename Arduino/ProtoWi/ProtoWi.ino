@@ -18,29 +18,44 @@ CommandAndDataHandler cmdAndDataHandler(serialComm.Commands, serialComm.Telemetr
 // IMU
 Adafruit_BNO055 bno = Adafruit_BNO055(55);
 
-const long cycleTimeMicros = 20000;
+const long cycleTimeMicros = 10000;
 unsigned long previousMicros = 0;
 float desiredHeading = 0.0;
 float desiredDistance = 0.0;
+const float tiltOffset = 0.125;
+const float yawOffset = 5.0;
 
 // Controller
 const int PWM_OFFSET = 127;
-const float Kp = 600.0;
-const float Kd = 35.0;
-const float Kw = 0.5;
+const float Kp = 900.0;
+const float Kd = 50.0;
+const float Kw = 2.0;
 const float MaxEffort = 50.0;
 PD_Controller pd_controller(Kp, Kd, Kw, MaxEffort);
 
 const int DeadBand = 3;
 
 // A filter for wheel velocity
+const float wheelAlpha = 0.5;
+const float effortAlpha = 0.05;
+
 float rightWheelVelocityFiltered = 0.0;
 float rightWheelVelocityPrev = 0.0;
-float rightWheelVelocityAlpha = 0.25;
+float rightWheelVelocityAlpha = wheelAlpha;
 
 float leftWheelVelocityFiltered = 0.0;
 float leftWheelVelocityPrev = 0.0;
-float leftWheelVelocityAlpha = 0.5;
+float leftWheelVelocityAlpha = wheelAlpha;
+
+// A filter for effort output
+float rightWheelEffortFiltered = 0.0;
+float rightWheelEffortPrev = 0.0;
+float rightWheelEffortAlpha = effortAlpha;
+
+float leftWheelEffortFiltered = 0.0;
+float leftWheelEffortPrev = 0.0;
+float leftWheelEffortAlpha = effortAlpha;
+
 
 // Pin Definitions
 const int leftWheelPin = 9;
@@ -99,18 +114,31 @@ void loop(){
     if (serialComm.NewCommandsArrived()){
       cmdAndDataHandler.ProcessCmds();
     }
+
+    /// Execute the robot control logic 
+    performControl(currentMicros - previousMicros);
+
     /// Have C&DH prepare the robot telemetry for transmission
     cmdAndDataHandler.LoadTelemetry();
     /// - Send the telemetry over the serial port
     serialComm.Tx();
 
-    /// Execute the robot control logic 
-    performControl(currentMicros - previousMicros);
-
     previousMicros = currentMicros;
   }
   
 }
+
+float alphaFilter(float input, float &previousValue, float alpha)
+{
+  float output = (1.0 - alpha) * input + alpha * previousValue;
+  previousValue = output;
+  return output;
+}
+
+const int glitchMin = 75;
+const int glitchMax = 225;
+int leftWheelVelRawPrev = 0;
+int rightWheelVelRawPrev = 0;
 
 void performControl(int loopTime){
   sensors_event_t event; 
@@ -119,26 +147,40 @@ void performControl(int loopTime){
   float tiltAngleRad = event.orientation.z * 3.14159 / 180.0;
   float tiltAngleDotRadps = -gyro.x();
   float yawAngleRad = event.orientation.x * 3.14159 / 180.0;
+  
   int rightWheelVelRaw = pulseIn(rightWheelVelPin, HIGH);
   int leftWheelVelRaw = pulseIn(leftWheelVelPin, HIGH);
+
+  if(rightWheelVelRaw < glitchMin || rightWheelVelRaw > glitchMax)
+  {
+    rightWheelVelRaw = rightWheelVelRawPrev;
+  }
+  rightWheelVelRawPrev = rightWheelVelRaw;
+
+  if(leftWheelVelRaw < glitchMin || leftWheelVelRaw > glitchMax)
+  {
+    leftWheelVelRaw = leftWheelVelRawPrev;
+  }
+  leftWheelVelRawPrev = leftWheelVelRaw;
+  
   float rightWheelVelRadps = -mapIntToFloat(rightWheelVelRaw, 10, 340, -30.0, 30.0);
   float leftWheelVelRadps = mapIntToFloat(leftWheelVelRaw, 10, 340, -30.0, 30.0);
 
-  rightWheelVelocityFiltered = (1.0 - rightWheelVelocityAlpha) * rightWheelVelRadps + rightWheelVelocityAlpha * rightWheelVelocityPrev;
-  leftWheelVelocityFiltered = (1.0 - leftWheelVelocityAlpha) * leftWheelVelRadps + leftWheelVelocityAlpha * leftWheelVelocityPrev;
-  rightWheelVelocityPrev = rightWheelVelocityFiltered;
-  leftWheelVelocityPrev = leftWheelVelocityFiltered;
+  rightWheelVelocityFiltered = alphaFilter(rightWheelVelRadps, rightWheelVelocityPrev, rightWheelVelocityAlpha);
+  leftWheelVelocityFiltered = alphaFilter(leftWheelVelRadps, leftWheelVelocityPrev, leftWheelVelocityAlpha);
   
-  float rightWheelEffort = pd_controller.next(robotState.ControlAngle, tiltAngleRad, 0.0, tiltAngleDotRadps, robotState.ControlHeading, rightWheelVelRadps);
-  float leftWheelEffort = pd_controller.next(robotState.ControlAngle, tiltAngleRad, 0.0, tiltAngleDotRadps, -robotState.ControlHeading, leftWheelVelRadps);
+  float rightWheelEffort = pd_controller.next(robotState.ControlAngle + tiltOffset, tiltAngleRad, 0.0, tiltAngleDotRadps, robotState.ControlHeading + yawOffset, rightWheelVelRadps);
+  rightWheelEffortFiltered = alphaFilter(rightWheelEffort, rightWheelEffortPrev, rightWheelEffortAlpha);
+  float leftWheelEffort = pd_controller.next(robotState.ControlAngle + tiltOffset, tiltAngleRad, 0.0, tiltAngleDotRadps, -(robotState.ControlHeading + yawOffset), leftWheelVelRadps);
+  leftWheelEffortFiltered = alphaFilter(leftWheelEffort, leftWheelEffortPrev, leftWheelEffortAlpha);
 
   //float rightWheelEffort = pd_controller.next(0.125, tiltAngleRad, 0.0, tiltAngleDotRadps, 0.0, rightWheelVelRadps);
   //float leftWheelEffort = pd_controller.next(0.125, tiltAngleRad, 0.0, tiltAngleDotRadps, 0.0, leftWheelVelRadps);
 
-  analogWrite(leftWheelPin, PWM_OFFSET - (int) leftWheelEffort);
-  analogWrite(rightWheelPin, PWM_OFFSET + (int) (rightWheelEffort * rightWheelMultiplier));
+  analogWrite(leftWheelPin, PWM_OFFSET - (int) leftWheelEffortFiltered);
+  analogWrite(rightWheelPin, PWM_OFFSET + (int) (rightWheelEffortFiltered * rightWheelMultiplier));
 
   robotState.SensedHeading = yawAngleRad;
-  robotState.SensedAngle = tiltAngleRad;
+  robotState.SensedAngle = robotState.ControlHeading;
 }
 
