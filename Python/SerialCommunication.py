@@ -5,7 +5,7 @@ import logging
 from google.protobuf.message import EncodeError
 
 class SerialCommunication(object):
-    def __init__(self, portName, frequency=0.05):
+    def __init__(self, portName, frequency=0.025):
         self.serialPort = serial.Serial(
             port=portName, baudrate=57600, rtscts=True, dsrdtr=True)
         self.resetPacketCounters()
@@ -20,6 +20,9 @@ class SerialCommunication(object):
     	cmd_and_footer = cmd+self.cmdFooter
         logging.debug(":".join("{:02x}".format(ord(c)) for c in cmd_and_footer))
         self.serialPort.write(cmd_and_footer)
+        #for byte in cmd_and_footer:
+        #    self.serialPort.write(byte)
+        #    time.sleep(self.CommFrequency)
 
     def commandArduino(self, cmd):
         if (isinstance(cmd, comm_packet_pb2.CommandPacket)):

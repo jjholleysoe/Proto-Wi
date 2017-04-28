@@ -16,6 +16,11 @@ class CommDiagnosticGui(QtGui.QMainWindow, Ui_Comm_Window):
         QtGui.QMainWindow.__init__(self)
         Ui_Comm_Window.__init__(self)
         self.setupUi()
+        self.cmd_packet = comm_packet_pb2.CommandPacket()
+        control_signal_cmd = self.cmd_packet.CommandedOrientation
+        control_signal_cmd.Angle = 0.0
+        control_signal_cmd.Heading = 0.0
+        control_signal_cmd.Name = "a"
 
     def setupUi(self):
         super(CommDiagnosticGui, self).setupUi(self)
@@ -29,6 +34,7 @@ class CommDiagnosticGui(QtGui.QMainWindow, Ui_Comm_Window):
 
         # Add amplitude slider value changed event
         self.AmplitudeSlider.valueChanged.connect(self.amplitudeChange)
+        self.YawSlider.valueChanged.connect(self.yawChange)
 
         #Connect plots to the plot layout
         self.responsePlot = ResponsePlotCanvas(None, width=5, height=4, dpi=100)
@@ -74,16 +80,31 @@ class CommDiagnosticGui(QtGui.QMainWindow, Ui_Comm_Window):
             self.SerialCommThread.terminate()
 
     def amplitudeChange(self):
-        scaledAmplitude = self.scale(self.AmplitudeSlider.value(), (0.0,100.0), (-1.0,+1.0))
-        cmd_packet = comm_packet_pb2.CommandPacket()
-        control_signal_cmd = cmd_packet.CommandedOrientation
+        scaledAmplitude = self.scale(self.AmplitudeSlider.value(), (0.0,100.0), (-0.3,+0.3))
+        scaledYaw = self.scale(self.YawSlider.value(), (0.0,100.0), (-0.3,+0.3))
+        self.cmd_packet = comm_packet_pb2.CommandPacket()
+        control_signal_cmd = self.cmd_packet.CommandedOrientation
         control_signal_cmd.Angle = scaledAmplitude
-        control_signal_cmd.Heading = 0.0
-        control_signal_cmd.Name = "Orientation"
+        control_signal_cmd.Heading = scaledYaw
+        control_signal_cmd.Name = "a"
         self.AmplitudeValue.setText("%.2f"%scaledAmplitude)
-        self.emit(SIGNAL('send_cmds(PyQt_PyObject)'), cmd_packet)
+        self.YawValue.setText("%.2f"%scaledYaw)
+        self.emit(SIGNAL('send_cmds(PyQt_PyObject)'), self.cmd_packet)
+
+    def yawChange(self):
+        scaledAmplitude = self.scale(self.AmplitudeSlider.value(), (0.0,100.0), (-0.3,+0.3))
+        scaledYaw = self.scale(self.YawSlider.value(), (0.0,100.0), (-50.0,+50.0))
+        self.cmd_packet = comm_packet_pb2.CommandPacket()
+        control_signal_cmd = self.cmd_packet.CommandedOrientation
+        control_signal_cmd.Angle = scaledAmplitude
+        control_signal_cmd.Heading = scaledYaw
+        control_signal_cmd.Name = "a"
+        self.AmplitudeValue.setText("%.2f"%scaledAmplitude)
+        self.YawValue.setText("%.2f"%scaledYaw)
+        self.emit(SIGNAL('send_cmds(PyQt_PyObject)'), self.cmd_packet)
 
     def stateUpdate(self, response):
+        self.emit(SIGNAL('send_cmds(PyQt_PyObject)'), self.cmd_packet)
         # called when new data arrives over the serial port
         return
 

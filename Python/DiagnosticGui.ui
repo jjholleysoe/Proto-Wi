@@ -23,7 +23,7 @@
       <height>741</height>
      </rect>
     </property>
-    <layout class="QVBoxLayout" name="Comm_Console" stretch="2,10,3">
+    <layout class="QVBoxLayout" name="Comm_Console" stretch="2,10,0">
      <item>
       <layout class="QVBoxLayout" name="TitleandSerialLayout" stretch="2,1">
        <item>
@@ -34,7 +34,7 @@
           </font>
          </property>
          <property name="text">
-          <string>Communication System Diagnostic</string>
+          <string>Balance Bot GUI</string>
          </property>
          <property name="alignment">
           <set>Qt::AlignCenter</set>
@@ -109,7 +109,7 @@
          <item>
           <widget class="QLabel" name="PId_Loop_Gain">
            <property name="text">
-            <string>Control Signal Slider</string>
+            <string>Tilt Angle</string>
            </property>
            <property name="alignment">
             <set>Qt::AlignCenter</set>
@@ -158,16 +158,9 @@
        <item>
         <layout class="QVBoxLayout" name="MotSpd_DatLayout">
          <item>
-          <widget class="QLabel" name="Rotat_PWM">
+          <widget class="QLabel" name="PId_Loop_Gain_2">
            <property name="text">
-            <string>TBD</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QLabel" name="Motor_Speed">
-           <property name="text">
-            <string>TBD</string>
+            <string>Yaw Rate</string>
            </property>
            <property name="alignment">
             <set>Qt::AlignCenter</set>
@@ -175,71 +168,37 @@
           </widget>
          </item>
          <item>
-          <layout class="QHBoxLayout" name="MotorSpdLayout">
-           <item>
-            <widget class="QLabel" name="LMotLbl">
-             <property name="text">
-              <string>tbd:</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QLabel" name="Lft_Motor_Speed">
-             <property name="text">
-              <string>tbd</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QLabel" name="RMotLbl">
-             <property name="text">
-              <string>tbd:</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QLabel" name="Rgt_Motor_Speed">
-             <property name="text">
-              <string>tbd</string>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </item>
-         <item>
-          <widget class="QLabel" name="Load_Data">
+          <widget class="QLabel" name="YawValue">
+           <property name="font">
+            <font>
+             <pointsize>17</pointsize>
+             <weight>75</weight>
+             <bold>true</bold>
+            </font>
+           </property>
            <property name="text">
-            <string>TBD</string>
+            <string>0.0</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignCenter</set>
            </property>
           </widget>
          </item>
          <item>
-          <layout class="QHBoxLayout" name="LoadDat_Layout">
-           <item>
-            <widget class="QLineEdit" name="LoadLineEdit"/>
-           </item>
-           <item>
-            <widget class="QPushButton" name="Load_Btn">
-             <property name="text">
-              <string>TBD</string>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </item>
-         <item>
           <layout class="QHBoxLayout" name="RcdandPlybckLo">
            <item>
-            <widget class="QPushButton" name="Record_Btn">
-             <property name="text">
-              <string>TBD</string>
+            <widget class="QSlider" name="YawSlider">
+             <property name="sliderPosition">
+              <number>50</number>
              </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QPushButton" name="Playback_Btn">
-             <property name="text">
-              <string>TBD</string>
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="tickPosition">
+              <enum>QSlider::TicksBelow</enum>
+             </property>
+             <property name="tickInterval">
+              <number>10</number>
              </property>
             </widget>
            </item>
@@ -258,7 +217,7 @@
      <x>0</x>
      <y>0</y>
      <width>991</width>
-     <height>23</height>
+     <height>20</height>
     </rect>
    </property>
    <property name="sizePolicy">

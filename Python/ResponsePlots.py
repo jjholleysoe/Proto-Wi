@@ -2,7 +2,9 @@ from PlotCanvas import *
 from PyQt4.QtCore import SIGNAL
 import warnings
 import matplotlib.cbook
+import time
 warnings.filterwarnings("ignore",category=matplotlib.cbook.mplDeprecation)
+
 
 class ResponsePlotCanvas(MplDynamicPlotCanvas):
     """This is a plot canvas for the response signal."""
@@ -13,6 +15,7 @@ class ResponsePlotCanvas(MplDynamicPlotCanvas):
     	self.setTitle()
         self.data = []
         self.axes.hold(False)
+        self.previousTime = 0
 
     def connectSlot(self, commThread):
         self.connect(commThread, SIGNAL("new_data_received(PyQt_PyObject)"), self.updatePlot)
@@ -23,6 +26,8 @@ class ResponsePlotCanvas(MplDynamicPlotCanvas):
             self.data.pop(0)
         try:
             if responseData.MeasuredAngle:
+                print responseData.MeasuredAngle, time.time() - self.previousTime
+                self.previousTime = time.time()
                 self.data.append(responseData.MeasuredAngle)
         except IndexError:
             return
